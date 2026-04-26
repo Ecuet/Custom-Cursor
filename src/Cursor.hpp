@@ -1,6 +1,3 @@
-#include "Geode/cocos/base_nodes/CCNode.h"
-#include "Geode/ui/LazySprite.hpp"
-#include "Geode/utils/Keyboard.hpp"
 #include "Geode/utils/cocos.hpp"
 #include <Geode/Geode.hpp>
 #include <map>

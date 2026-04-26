@@ -17,7 +17,6 @@
 #include <filesystem>
 #include <map>
 #include <string>
-#include <winuser.h>
 
 Cursor::Cursor() {
     recreate();
