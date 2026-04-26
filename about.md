@@ -12,4 +12,4 @@ There are some presets i made, so you can be satisfied if you lazy to make them
 Pixel Cursor by aspecsgaming from itch io
 Gothic Cursor by Karnation Karnage from itch io
 Stone Cursor by Wenrexa from itch io
-Calamitas Cursor from Custom-Cursor site 
+Calamitas and Pink Cursor from Custom-Cursor site 

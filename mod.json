@@ -25,7 +25,7 @@
 			"name": "Preset",
 			"description": "hey, i added presets in case you dont want to make your cursor yourself <3",
 			"default": "Custom",
-			"one-of": ["Custom", "Pixel","Gothic","Calamitas","Stone","Omori1","Omori2"]
+			"one-of": ["Custom", "Pixel","Gothic","Calamitas","Stone","Omori1","Omori2","Pink"]
 		},
 
 		"CursorScale": {
