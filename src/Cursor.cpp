@@ -1,0 +1,173 @@
+#include "Cursor.hpp"
+#include "Geode/cocos/CCDirector.h"
+#include "Geode/cocos/cocoa/CCGeometry.h"
+#include "Geode/cocos/cocoa/CCObject.h"
+#include "Geode/cocos/platform/win32/CCApplication.h"
+#include "Geode/cocos/platform/win32/CCEGLView.h"
+#include "Geode/cocos/sprite_nodes/CCSprite.h"
+#include "Geode/cocos/support/CCPointExtension.h"
+#include "Geode/cocos/textures/CCTexture2D.h"
+#include "Geode/cocos/textures/CCTextureCache.h"
+#include "Geode/loader/Log.hpp"
+#include "Geode/ui/LazySprite.hpp"
+#include "Geode/ui/OverlayManager.hpp"
+#include "Geode/utils/cocos.hpp"
+#include "Geode/utils/function.hpp"
+#include <Geode/Result.hpp>
+#include <Geode/binding/EndLevelLayer.hpp>
+#include <Geode/binding/PlayLayer.hpp>
+#include <Geode/binding/RetryLevelLayer.hpp>
+#include <cmath>
+#include <filesystem>
+#include <map>
+#include <string>
+#include <winuser.h>
+
+Cursor::Cursor() {
+    recreate();
+
+    
+}
+
+void Cursor::recreate(){
+    for(auto i : m_cursors) {
+        if(i.second) i.second->removeFromParent();
+    }
+    auto Preset = Mod::get()->getSettingValue<std::string>("Presets");
+    bool IsCustom = Preset == "Custom";
+    
+    auto defaultCursor = Mod::get()->getSettingValue<std::filesystem::path>("DefaultCursor");
+    auto hoveredCursor = Mod::get()->getSettingValue<std::filesystem::path>("HoveredCursor");
+    auto HoldCursor = Mod::get()->getSettingValue<std::filesystem::path>("HoldCursor");
+
+    std::map<CursorTypes, std::filesystem::path> texturesPath = {
+        {CursorTypes::Default, defaultCursor},
+        {CursorTypes::Hovered, hoveredCursor},
+        {CursorTypes::Hold, HoldCursor}
+    };
+
+    if(IsCustom && (defaultCursor.empty() || !std::filesystem::exists(defaultCursor))){
+        m_active = false;
+        CCEGLView::sharedOpenGLView()->showCursor(true);
+        return;
+    }
+    m_active = true;
+    CCEGLView::sharedOpenGLView()->showCursor(false);
+
+    auto allTypes = {
+    CursorTypes::Default,
+    CursorTypes::Hold,
+    CursorTypes::Hovered
+    };
+
+    for(auto type : allTypes){
+        auto scaleSet = Mod::get()->getSettingValue<double>("CursorScale");
+        float scale = 15.f * (float) scaleSet;
+
+        CCSprite* newSprite;
+        if(IsCustom) {
+            auto path = texturesPath[type];
+            if(!path.empty()){
+                auto Texture = CCTextureCache::sharedTextureCache()->addImage(path.string().c_str(), true);
+
+                newSprite = CCSprite::createWithTexture(Texture);
+            }
+            else { m_activeCursors[type] = false; continue; }
+            
+        }
+        else newSprite = CCSprite::create(fmt::format("{}{}.png"_spr, enumToSTRTexture(type), Preset).c_str());
+        geode::log::info("{}/{}.png"_spr,Preset, enumToSTRTexture(type));
+        newSprite->setZOrder(5000);
+        newSprite->setID(enumToSTR(type));
+
+        geode::cocos::limitNodeSize(newSprite, {scale, scale}, 99.f, 0.0001f);
+
+        m_cursors[type] = newSprite;
+        m_activeCursors[type] = true;
+
+        OverlayManager::get()->addChild(newSprite);
+        
+        
+    }
+   
+}
+
+std::string Cursor::enumToSTR(CursorTypes type){
+    switch (type) {
+        case CursorTypes::Default: return "Default"_spr;
+        case CursorTypes::Hovered: return "Hovered"_spr;
+        case CursorTypes::Hold: return "Hold"_spr;
+    }
+    return "";
+}
+
+std::string Cursor::enumToSTRTexture(CursorTypes type){
+     switch (type) {
+        case CursorTypes::Default: return "default";
+        case CursorTypes::Hovered: return "hover";
+        case CursorTypes::Hold: return "hold";
+    }
+    return "";
+}
+
+void Cursor::addHovered(){
+    ++m_hovered;
+}
+
+void Cursor::setHolding(bool value){
+    m_isHolding = value;
+}
+
+
+Cursor* Cursor::get(){
+    static Cursor inst;
+
+    return &inst;
+}
+
+
+void Cursor::update(){
+    if(!m_active || !m_cursors[CursorTypes::Default]) {
+        return;
+    }
+    bool isHoveredCursorDisabled = Mod::get()->getSettingValue<bool>("DisableHoveredCursor");
+
+    CCEGLView::sharedOpenGLView()->showCursor(false);
+
+    if(m_hovered > 0) m_isHovered = true;
+    else m_isHovered = false;
+
+    m_hovered = 0;
+    if (m_cursors[CursorTypes::Hold] && m_activeCursors[CursorTypes::Hold] && m_isHolding) {
+        m_currentState = CursorTypes::Hold;
+    }
+    else if(m_cursors[CursorTypes::Hovered] && m_activeCursors[CursorTypes::Hovered] && m_isHovered && !isHoveredCursorDisabled){
+        m_currentState = CursorTypes::Hovered;
+    }
+    else {
+        m_currentState = CursorTypes::Default;
+    }
+    
+    bool showCursor = true;
+
+    auto pl = PlayLayer::get();
+    if (pl){
+        auto levelretry = pl->getChildByType<RetryLevelLayer>(0);
+        auto completed =  pl->getChildByType<EndLevelLayer>(0);
+        if(!(pl->m_isPaused || levelretry || completed)) showCursor = false;
+        
+    }
+
+    auto pos = getMousePos() - ccp(0, 2) ;
+
+    for(auto [type, cursor] : m_cursors){
+        if(cursor) {
+            cursor->setPosition(pos); 
+
+            if(!showCursor) {cursor->setVisible(false); continue; } 
+            
+            cursor->setVisible(  m_currentState == type);
+        }
+    }
+   
+}
