@@ -1,5 +1,6 @@
 #include "Cursor.hpp"
 #include "Geode/cocos/CCDirector.h"
+#include "Geode/cocos/base_nodes/CCNode.h"
 #include "Geode/cocos/cocoa/CCGeometry.h"
 //#include "Geode/cocos/platform/win32/CCEGLView.h"
 #include "Geode/cocos/sprite_nodes/CCSprite.h"
@@ -17,6 +18,7 @@
 #include <filesystem>
 #include <map>
 #include <string>
+#include "Utils.hpp"
 
 Cursor::Cursor() {
     recreate();
@@ -114,6 +116,16 @@ void Cursor::setHolding(bool value){
     m_isHolding = value;
 }
 
+void Cursor::addButton(CCNode* node){
+    if(!node) return;
+
+    m_activeNodes.insert(node);
+}
+void Cursor::removeButton(CCNode* node){
+    if(!node) return;
+
+    m_activeNodes.erase(node);
+}
 
 Cursor* Cursor::get(){
     static Cursor inst;
@@ -121,9 +133,30 @@ Cursor* Cursor::get(){
     return &inst;
 }
 
+bool Cursor::isHovered(CCNode* node){
+    
+    auto mousePos = getMousePos();
+    auto localPos = node->getParent()->convertToNodeSpace(mousePos);
+    
+    auto rect = node->boundingBox();
+    return rect.containsPoint(localPos);
+	
+}
 
-void Cursor::update(){
-    if(!m_active || !m_cursors[CursorTypes::Default]) {
+
+void Cursor::updateHover(){
+    auto mousePos = getMousePos();
+    for(auto node : m_activeNodes){
+        bool hovered = isHovered(node);
+        if(hovered && tooltips::utils::isHoverable(node, mousePos)){
+            addHovered();
+            break;
+        }
+    }
+}
+
+void Cursor::updateCursor(){
+ if(!m_active || !m_cursors[CursorTypes::Default]) {
         return;
     }
     bool isHoveredCursorDisabled = Mod::get()->getSettingValue<bool>("DisableHoveredCursor");
@@ -166,5 +199,10 @@ void Cursor::update(){
             cursor->setVisible(  m_currentState == type);
         }
     }
+}
+
+void Cursor::update(){
+    updateHover();
+    updateCursor();
    
 }

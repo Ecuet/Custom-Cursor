@@ -12,6 +12,7 @@
 	"developer": "ecuet",
 	"description": "Allows you to customize your cursor yourself",
 	"dependencies": {
+		"alphalaneous.alphas_geode_utils": ">=1.1.8",
 		"geode.node-ids": ">=v1.20.0"
 	},
 	"resources": {
@@ -19,6 +20,9 @@
             "resources/*.png"
         ]
 	},
+	"tags": [
+		"universal","interface","enhancement"
+	],
 	"settings": {
 		"Presets":{
 			"type":"string",

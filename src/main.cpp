@@ -13,6 +13,9 @@
 #include "Geode/utils/cocos.hpp"
 #include "Geode/modify/CCMenuItemSpriteExtra.hpp"
 #include "Geode/modify/CCLayer.hpp"
+#include "Geode/modify/CCMenuItem.hpp"
+#include <alphalaneous.alphas_geode_utils/include/ObjectModify.hpp>
+#include "Geode/ui/Button.hpp"
 
 using namespace geode::prelude;
 
@@ -23,31 +26,54 @@ public:
 	}
 };
 
-class $modify(my,CCMenuItemSpriteExtra) {
-	bool init(CCNode* sprite, CCNode* selectedSprite, CCObject* target, SEL_MenuHandler callback) {
-		if (!CCMenuItemSpriteExtra::init(sprite, selectedSprite, target, callback)) return false;
-		
-		this->schedule(schedule_selector(my::customUpdate));
-
-		return true;
+class $baseModify(MyCC, CCMenuItem){
+	void modify(){
+		addOnEnterCallback([this] {
+			Cursor::get()->addButton(this);
+		});
+		addOnExitCallback([this] {
+			Cursor::get()->removeButton(this);
+		});
 	}
-	bool isHovered(){
-		if(!isEnabled()) return false;
-		auto mousePos = getMousePos();
-		auto localPos = this->getParent()->convertToNodeSpace(mousePos);
-		
-		auto rect = boundingBox();
-		return rect.containsPoint(localPos);
-	}
-	void customUpdate(float dt){
-		if(isHovered()){
-			Cursor::get()->addHovered();
-		}
-	}
-	
 };
 
-// class $modify(my, CCLayer){
+class $baseModify(MyBT, Button){
+	void modify(){
+		addOnEnterCallback([this] {
+			Cursor::get()->addButton(this);
+		});
+		addOnExitCallback([this] {
+			Cursor::get()->removeButton(this);
+		});
+	}
+};
+
+
+// class $modify(my,CCMenuItemSpriteExtra) {
+// 	bool init(CCNode* sprite, CCNode* selectedSprite, CCObject* target, SEL_MenuHandler callback) {
+// 		if (!CCMenuItemSpriteExtra::init(sprite, selectedSprite, target, callback)) return false;
+		
+// 		this->schedule(schedule_selector(my::customUpdate));
+
+// 		return true;
+// 	}
+// 	bool isHovered(){
+// 		if(!isEnabled()) return false;
+// 		auto mousePos = getMousePos();
+// 		auto localPos = this->getParent()->convertToNodeSpace(mousePos);
+		
+// 		auto rect = boundingBox();
+// 		return rect.containsPoint(localPos);
+// 	}
+// 	void customUpdate(float dt){
+// 		if(isHovered()){
+// 			Cursor::get()->addHovered();
+// 		}
+// 	}
+	
+// };
+
+// class $modify(myLayer, CCLayer){
 // 	struct Fields {
 // 		CCPoint oldPos;
 		
