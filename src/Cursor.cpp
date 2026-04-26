@@ -18,6 +18,7 @@
 #include <filesystem>
 #include <map>
 #include <string>
+#include "Geode/utils/string.hpp"
 #include "Utils.hpp"
 
 Cursor::Cursor() {
@@ -42,7 +43,7 @@ void Cursor::recreate(){
         {CursorTypes::Hovered, hoveredCursor},
         {CursorTypes::Hold, HoldCursor}
     };
-
+    
     if(IsCustom && (defaultCursor.empty() || !std::filesystem::exists(defaultCursor))){
         m_active = false;
         PlatformToolbox::showCursor();
@@ -134,9 +135,11 @@ Cursor* Cursor::get(){
 }
 
 bool Cursor::isHovered(CCNode* node){
-    
+    auto parent = node->getParent();
+    if(!parent) return false;
+
     auto mousePos = getMousePos();
-    auto localPos = node->getParent()->convertToNodeSpace(mousePos);
+    auto localPos = parent->convertToNodeSpace(mousePos);
     
     auto rect = node->boundingBox();
     return rect.containsPoint(localPos);
