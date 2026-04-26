@@ -1,7 +1,7 @@
 #include "Cursor.hpp"
 #include "Geode/cocos/CCDirector.h"
 #include "Geode/cocos/cocoa/CCGeometry.h"
-#include "Geode/cocos/platform/win32/CCEGLView.h"
+//#include "Geode/cocos/platform/win32/CCEGLView.h"
 #include "Geode/cocos/sprite_nodes/CCSprite.h"
 #include "Geode/cocos/support/CCPointExtension.h"
 #include "Geode/cocos/textures/CCTextureCache.h"
@@ -11,6 +11,7 @@
 #include "Geode/utils/cocos.hpp"
 #include <Geode/Result.hpp>
 #include <Geode/binding/EndLevelLayer.hpp>
+#include <Geode/binding/PlatformToolbox.hpp>
 #include <Geode/binding/PlayLayer.hpp>
 #include <Geode/binding/RetryLevelLayer.hpp>
 #include <filesystem>
@@ -43,12 +44,13 @@ void Cursor::recreate(){
 
     if(IsCustom && (defaultCursor.empty() || !std::filesystem::exists(defaultCursor))){
         m_active = false;
-        CCEGLView::sharedOpenGLView()->showCursor(true);
+        PlatformToolbox::showCursor();
+       // CCEGLView::sharedOpenGLView()->showCursor(true);
         return;
     }
     m_active = true;
-    CCEGLView::sharedOpenGLView()->showCursor(false);
-
+   //CCEGLView::sharedOpenGLView()->showCursor(false);
+    PlatformToolbox::hideCursor();
     auto allTypes = {
     CursorTypes::Default,
     CursorTypes::Hold,
@@ -127,7 +129,8 @@ void Cursor::update(){
     }
     bool isHoveredCursorDisabled = Mod::get()->getSettingValue<bool>("DisableHoveredCursor");
 
-    CCEGLView::sharedOpenGLView()->showCursor(false);
+    PlatformToolbox::hideCursor();
+    //CCEGLView::sharedOpenGLView()->showCursor(false);
 
     if(m_hovered > 0) m_isHovered = true;
     else m_isHovered = false;
