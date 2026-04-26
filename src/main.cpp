@@ -8,12 +8,7 @@
 #include <Geode/binding/PlayLayer.hpp>
 #include <filesystem>
 #include "Cursor.hpp"
-#include "Geode/cocos/layers_scenes_transitions_nodes/CCLayer.h"
-#include "Geode/cocos/platform/win32/CCEGLView.h"
-#include "Geode/cocos/touch_dispatcher/CCTouchDispatcher.h"
-#include "Geode/loader/Log.hpp"
 #include "Geode/loader/SettingV3.hpp"
-#include "Geode/platform/windows.hpp"
 #include "Geode/utils/Keyboard.hpp"
 #include "Geode/utils/cocos.hpp"
 #include "Geode/modify/CCMenuItemSpriteExtra.hpp"

@@ -1,23 +1,18 @@
 #include "Cursor.hpp"
 #include "Geode/cocos/CCDirector.h"
 #include "Geode/cocos/cocoa/CCGeometry.h"
-#include "Geode/cocos/cocoa/CCObject.h"
-#include "Geode/cocos/platform/win32/CCApplication.h"
 #include "Geode/cocos/platform/win32/CCEGLView.h"
 #include "Geode/cocos/sprite_nodes/CCSprite.h"
 #include "Geode/cocos/support/CCPointExtension.h"
-#include "Geode/cocos/textures/CCTexture2D.h"
 #include "Geode/cocos/textures/CCTextureCache.h"
 #include "Geode/loader/Log.hpp"
 #include "Geode/ui/LazySprite.hpp"
 #include "Geode/ui/OverlayManager.hpp"
 #include "Geode/utils/cocos.hpp"
-#include "Geode/utils/function.hpp"
 #include <Geode/Result.hpp>
 #include <Geode/binding/EndLevelLayer.hpp>
 #include <Geode/binding/PlayLayer.hpp>
 #include <Geode/binding/RetryLevelLayer.hpp>
-#include <cmath>
 #include <filesystem>
 #include <map>
 #include <string>
@@ -76,7 +71,7 @@ void Cursor::recreate(){
             
         }
         else newSprite = CCSprite::create(fmt::format("{}{}.png"_spr, enumToSTRTexture(type), Preset).c_str());
-        geode::log::info("{}/{}.png"_spr,Preset, enumToSTRTexture(type));
+       
         newSprite->setZOrder(5000);
         newSprite->setID(enumToSTR(type));
 
