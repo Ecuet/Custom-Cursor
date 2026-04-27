@@ -76,7 +76,7 @@ void Cursor::recreate(){
         }
         else newSprite = CCSprite::create(fmt::format("{}{}.png"_spr, enumToSTRTexture(type), Preset).c_str());
        
-        newSprite->setZOrder(5000);
+        //newSprite->setZOrder(5000);
         newSprite->setID(enumToSTR(type));
 
         geode::cocos::limitNodeSize(newSprite, {scale, scale}, 99.f, 0.0001f);

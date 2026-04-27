@@ -8,7 +8,7 @@
 	},
 	"id": "ecuet.custom-cursor",
 	"name": "Custom Cursor",
-	"version": "v1.0.3",
+	"version": "v1.0.5",
 	"developer": "ecuet",
 	"description": "Allows you to customize your cursor yourself",
 	"dependencies": {
@@ -21,7 +21,7 @@
         ]
 	},
 	"tags": [
-		"universal","interface","enhancement"
+		"universal","interface","enhancement","customization"
 	],
 	"settings": {
 		"Presets":{
@@ -29,7 +29,7 @@
 			"name": "Preset",
 			"description": "hey, i added presets in case you dont want to make your cursor yourself <3",
 			"default": "Custom",
-			"one-of": ["Custom", "Pixel","Gothic","Calamitas","Stone","Omori1","Omori2","Pink"]
+			"one-of": ["Custom", "Pixel","Gothic","Calamitas","Stone","Omori1","Omori2","Pink","Boykisser"]
 		},
 
 		"CursorScale": {
