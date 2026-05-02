@@ -6,7 +6,6 @@
 #include "Geode/cocos/robtop/sprite_nodes/CCSpriteExtra.h"
 #include "Geode/cocos/sprite_nodes/CCSprite.h"
 #include "Geode/loader/Mod.hpp"
-#include "Geode/platform/windows.hpp"
 #include "Geode/ui/Button.hpp"
 #include "Geode/ui/Layout.hpp"
 #include "Geode/ui/Popup.hpp"
