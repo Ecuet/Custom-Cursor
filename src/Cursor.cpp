@@ -20,6 +20,7 @@
 #include <string>
 #include "Geode/utils/string.hpp"
 #include "Utils.hpp"
+#include "cursorList.hpp"
 
 Cursor::Cursor() {
     recreate();
@@ -31,7 +32,7 @@ void Cursor::recreate(){
     for(auto i : m_cursors) {
         if(i.second) i.second->removeFromParent();
     }
-    auto Preset = Mod::get()->getSettingValue<std::string>("Presets");
+    auto Preset = Mod::get()->getSavedValue<std::string>("Presets");
     bool IsCustom = Preset == "Custom";
     
     auto defaultCursor = Mod::get()->getSettingValue<std::filesystem::path>("DefaultCursor");
@@ -61,7 +62,9 @@ void Cursor::recreate(){
 
     for(auto type : allTypes){
         auto scaleSet = Mod::get()->getSettingValue<double>("CursorScale");
-        float scale = 15.f * (float) scaleSet;
+        auto addScale = CursorList::getScale(Preset);
+
+        float scale = 15.f * (float) scaleSet * addScale;
 
         CCSprite* newSprite;
         if(IsCustom) {
@@ -74,7 +77,12 @@ void Cursor::recreate(){
             else { m_activeCursors[type] = false; continue; }
             
         }
-        else newSprite = CCSprite::create(fmt::format("{}{}.png"_spr, enumToSTRTexture(type), Preset).c_str());
+        else {
+            std::string prefix =  CursorList::getPrefix(Preset); 
+            std::string path = fmt::format("{}{}.{}", enumToSTRTexture(type), Preset, prefix).c_str();
+
+            newSprite = CCSprite::create(fmt::format("{}"_spr,path).c_str());
+        }
        
         //newSprite->setZOrder(5000);
         newSprite->setID(enumToSTR(type));

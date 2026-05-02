@@ -1,4 +1,5 @@
 #include "Geode/DefaultInclude.hpp"
+#include "Geode/cocos/CCDirector.h"
 #include "Geode/cocos/CCScheduler.h"
 #include "Geode/cocos/base_nodes/CCNode.h"
 #include "Geode/cocos/cocoa/CCGeometry.h"
@@ -8,14 +9,17 @@
 #include <Geode/binding/PlayLayer.hpp>
 #include <filesystem>
 #include "Cursor.hpp"
+#include "Geode/cocos/menu_nodes/CCMenu.h"
 #include "Geode/loader/SettingV3.hpp"
 #include "Geode/utils/Keyboard.hpp"
 #include "Geode/utils/cocos.hpp"
 #include "Geode/modify/CCMenuItemSpriteExtra.hpp"
 #include "Geode/modify/CCLayer.hpp"
 #include "Geode/modify/CCMenuItem.hpp"
+#include "Geode/modify/MenuLayer.hpp"
 #include <alphalaneous.alphas_geode_utils/include/ObjectModify.hpp>
 #include "Geode/ui/Button.hpp"
+#include "CursorMenu.hpp"
 
 using namespace geode::prelude;
 
@@ -23,6 +27,35 @@ class SixSeven : public CCObject {
 public:
 	void update(float dt){
 		Cursor::get()->update();
+	}
+};
+
+class $modify(MyMenu, MenuLayer){
+	void onBTN(CCObject* target){
+		CursorMenu::create()->show();
+	}
+	bool init() {
+		if (!MenuLayer::init()) return false;
+		
+		auto winSize = CCDirector::sharedDirector()->getWinSize();
+
+		auto sprite = CCSprite::create("defaultGothic.png"_spr);
+		sprite->setScale(0.6f);
+
+		auto cursorBtn = CCMenuItemSpriteExtra::create(
+			sprite, nullptr, this, 
+	menu_selector(MyMenu::onBTN)
+		);
+		cursorBtn->setPosition({winSize.width - 50.f, winSize.height - 40.f });
+
+		auto menu = CCMenu::create();
+		menu->addChild(cursorBtn);
+		menu->ignoreAnchorPointForPosition(false);
+		menu->setID("CustomCursorBTN"_spr);
+		
+		addChild(menu);
+			
+		return true;
 	}
 };
 
@@ -115,9 +148,6 @@ $on_mod(Loaded) {
 		Cursor::get()->recreate();
 	});
 
-	listenForSettingChanges<std::string>("Presets", [](std::string p){
-		Cursor::get()->recreate();
-	});
 	listenForSettingChanges<bool>("DisableHoveredCursor", [](bool s){
 		Cursor::get()->recreate();
 	});

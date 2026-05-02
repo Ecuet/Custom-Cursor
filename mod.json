@@ -8,30 +8,28 @@
 	},
 	"id": "ecuet.custom-cursor",
 	"name": "Custom Cursor",
-	"version": "v1.0.5",
+	"version": "v1.0.6",
 	"developer": "ecuet",
 	"description": "Allows you to customize your cursor yourself",
 	"dependencies": {
 		"alphalaneous.alphas_geode_utils": ">=1.1.8",
-		"geode.node-ids": ">=v1.20.0"
+		"geode.node-ids": ">=v1.20.0",
+		"prevter.imageplus": ">=1.1.0"
+		
 	},
 	"resources": {
 		"sprites": [
             "resources/*.png"
-        ]
+			
+        ],
+		"files": [
+			"resources/*.gif"
+		]
 	},
 	"tags": [
 		"universal","interface","enhancement","customization"
 	],
 	"settings": {
-		"Presets":{
-			"type":"string",
-			"name": "Preset",
-			"description": "hey, i added presets in case you dont want to make your cursor yourself <3",
-			"default": "Custom",
-			"one-of": ["Custom", "Pixel","Gothic","Calamitas","Stone","Omori1","Omori2","Pink","Boykisser"]
-		},
-
 		"CursorScale": {
 			"type": "float",
 			"name": "Cursor Scale",
@@ -69,7 +67,7 @@
 				"dialog": "open",
 				"filters": [
 					{
-						"files": ["*.png","*.jpg","*.jpeg"],
+						"files": ["*.png","*.jpg","*.jpeg", "*.gif"],
 						"description": "Pictures"
 					}
 				]
@@ -88,7 +86,7 @@
 				"dialog": "open",
 				"filters": [
 					{
-						"files": ["*.png","*.jpg","*.jpeg"],
+						"files": ["*.png","*.jpg","*.jpeg", "*.gif"],
 						"description": "Pictures"
 					}
 				]
@@ -107,7 +105,7 @@
 				"dialog": "open",
 				"filters": [
 					{
-						"files": ["*.png","*.jpg","*.jpeg"],
+						"files": ["*.png","*.jpg","*.jpeg", "*.gif"],
 						"description": "Pictures"
 					}
 				]
