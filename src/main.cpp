@@ -48,12 +48,15 @@ class $modify(MyMenu, MenuLayer){
 		);
 		cursorBtn->setPosition({winSize.width - 50.f, winSize.height - 40.f });
 
-		auto menu = CCMenu::create();
-		menu->addChild(cursorBtn);
-		menu->ignoreAnchorPointForPosition(false);
-		menu->setID("CustomCursorBTN"_spr);
+		// auto menu = CCMenu::create();
+		// menu->addChild(cursorBtn);
+		// menu->ignoreAnchorPointForPosition(false);
+		// menu->setID("CustomCursorBTN"_spr);
 		
-		addChild(menu);
+		// addChild(menu);
+
+		auto rightMenu = getChildByID("right-side-menu");
+		if (rightMenu) rightMenu->addChild(cursorBtn);
 			
 		return true;
 	}
