@@ -44,20 +44,16 @@ class $modify(MyMenu, MenuLayer){
 
 		auto cursorBtn = CCMenuItemSpriteExtra::create(
 			sprite, nullptr, this, 
-	menu_selector(MyMenu::onBTN)
+			menu_selector(MyMenu::onBTN)
 		);
-		cursorBtn->setPosition({winSize.width - 50.f, winSize.height - 40.f });
 
-		// auto menu = CCMenu::create();
-		// menu->addChild(cursorBtn);
-		// menu->ignoreAnchorPointForPosition(false);
-		// menu->setID("CustomCursorBTN"_spr);
-		
-		// addChild(menu);
+		cursorBtn->setID("cursurselect"_spr);
 
 		auto rightMenu = getChildByID("right-side-menu");
-		if (rightMenu) rightMenu->addChild(cursorBtn);
+		rightMenu->addChild(cursorBtn);
 			
+		rightMenu->updateLayout();
+
 		return true;
 	}
 };
@@ -83,60 +79,6 @@ class $baseModify(MyBT, Button){
 		});
 	}
 };
-
-
-// class $modify(my,CCMenuItemSpriteExtra) {
-// 	bool init(CCNode* sprite, CCNode* selectedSprite, CCObject* target, SEL_MenuHandler callback) {
-// 		if (!CCMenuItemSpriteExtra::init(sprite, selectedSprite, target, callback)) return false;
-		
-// 		this->schedule(schedule_selector(my::customUpdate));
-
-// 		return true;
-// 	}
-// 	bool isHovered(){
-// 		if(!isEnabled()) return false;
-// 		auto mousePos = getMousePos();
-// 		auto localPos = this->getParent()->convertToNodeSpace(mousePos);
-		
-// 		auto rect = boundingBox();
-// 		return rect.containsPoint(localPos);
-// 	}
-// 	void customUpdate(float dt){
-// 		if(isHovered()){
-// 			Cursor::get()->addHovered();
-// 		}
-// 	}
-	
-// };
-
-// class $modify(myLayer, CCLayer){
-// 	struct Fields {
-// 		CCPoint oldPos;
-		
-// 	};
-	
-// 	bool init(){
-// 		if(!CCLayer::init()) return false;
-
-// 		this->schedule(schedule_selector(my::customUpdate));
-
-// 		return true;
-// 	}
-// 	void checkIf(CCNode* c){
-// 		for(auto child : CCArrayExt<CCNode*>(c->getChildren())){
-// 			if(child->isVisible()) {
-				
-// 			}
-// 		}
-// 	}
-// 	void customUpdate(float dt){
-// 		auto mousePos = getMousePos();
-// 		if(mousePos == m_fields->oldPos) return;
-// 		m_fields->oldPos = mousePos;
-
-		
-// 	} 
-// };
 
 
 $on_mod(Loaded) {

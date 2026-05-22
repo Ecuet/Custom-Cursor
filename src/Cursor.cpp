@@ -32,7 +32,7 @@ void Cursor::recreate(){
     for(auto i : m_cursors) {
         if(i.second) i.second->removeFromParent();
     }
-    auto Preset = Mod::get()->getSavedValue<std::string>("Presets");
+    auto Preset = Mod::get()->getSavedValue<std::string>("Presets","Custom");
     bool IsCustom = Preset == "Custom";
     
     auto defaultCursor = Mod::get()->getSettingValue<std::filesystem::path>("DefaultCursor");
