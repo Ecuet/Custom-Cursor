@@ -166,8 +166,21 @@ void Cursor::updateHover(){
     }
 }
 
+void Cursor::togglebyTab() {
+    m_tabToggled = !m_tabToggled;
+
+    if(m_tabToggled) PlatformToolbox::showCursor();
+    else PlatformToolbox::hideCursor();
+}
+
+void Cursor::forceDisableTab() {
+    m_tabToggled = false;
+
+    PlatformToolbox::hideCursor();
+}
+
 void Cursor::updateCursor(){
- if(!m_active || !m_cursors[CursorTypes::Default]) {
+    if(!m_active || !m_cursors[CursorTypes::Default] || m_tabToggled) {
         return;
     }
     bool isHoveredCursorDisabled = Mod::get()->getSettingValue<bool>("DisableHoveredCursor");

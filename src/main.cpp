@@ -6,11 +6,18 @@
 #include "Geode/cocos/cocoa/CCObject.h"
 #include <Geode/Geode.hpp>
 #include <Geode/binding/CCMenuItemSpriteExtra.hpp>
+#include <Geode/binding/FLAlertLayer.hpp>
 #include <Geode/binding/PlayLayer.hpp>
+#include <cmath>
 #include <filesystem>
 #include "Cursor.hpp"
 #include "Geode/cocos/menu_nodes/CCMenu.h"
+#include "Geode/cocos/robtop/keyboard_dispatcher/CCKeyboardDelegate.h"
+#include "Geode/loader/Loader.hpp"
+#include "Geode/loader/Mod.hpp"
 #include "Geode/loader/SettingV3.hpp"
+#include "Geode/ui/GeodeUI.hpp"
+#include "Geode/ui/Popup.hpp"
 #include "Geode/utils/Keyboard.hpp"
 #include "Geode/utils/cocos.hpp"
 #include "Geode/modify/CCMenuItemSpriteExtra.hpp"
@@ -99,6 +106,9 @@ $on_mod(Loaded) {
 	listenForSettingChanges<double>("CursorScale", [](double s){
 		Cursor::get()->recreate();
 	});
+		listenForSettingChanges<bool>("ModMenusFix", [](bool s){
+		Cursor::get()->forceDisableTab();
+	});
 
 	MouseInputEvent().listen([](MouseInputData& data) {
 		if(data.button == geode::MouseInputData::Button::Left){
@@ -106,7 +116,36 @@ $on_mod(Loaded) {
 		}
 	}).leak();
 
+	KeyboardInputEvent().listen([](KeyboardInputData& data) {
+		bool isFixEnabled = Mod::get()->getSettingValue<bool>("ModMenusFix");
+		if(isFixEnabled && data.action == KeyboardInputData::Action::Press && data.key == cocos2d::enumKeyCodes::KEY_Tab) {
+			Cursor::get()->togglebyTab();
+		}
+	}).leak();
+
 	Loader::get()->queueInMainThread([] {
 		CCScheduler::get()->scheduleUpdateForTarget(new SixSeven{}, 2067, false);
 	});
+
+	
+}
+$on_game(Loaded) {
+	auto wasWarningShown = Mod::get()->getSavedValue<bool>("warningshown", false);
+
+	if(!wasWarningShown) {
+		auto tabModList = {"eclipse.eclipse-menu","absolllute.megahack","thesillydoggo.qolmod","firee.prism", "tobyadd.gdh"};
+		for(auto id: tabModList) {
+			if(geode::Loader::get()->isModLoaded(id)) {
+				geode::createQuickPopup("Warning!", 
+					"Sooo, I noticed you have some mod menus that open with TAB... And they overlap the custom cursor, so I added an experimental feature that fixes it. You can enable it in the settings.", "Ok", "Open Settings", 
+					[](FLAlertLayer* layer, bool btn2) {
+						Mod::get()->setSavedValue<bool>("warningshown", true);
+						if(btn2) {
+							openSettingsPopup(Mod::get(), false);
+						}
+					}
+				);
+			}
+		}
+	}
 }

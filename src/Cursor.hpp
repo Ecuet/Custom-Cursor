@@ -28,9 +28,8 @@ private:
     bool m_isHolding = false;
 
     bool m_active = false;
-
-
     
+    bool m_tabToggled = false;
 
 public:
     Cursor();
@@ -51,6 +50,9 @@ public:
 
     void updateCursor();
     void updateHover();
+
+    void togglebyTab();
+    void forceDisableTab();
 
     std::string enumToSTR(CursorTypes type);
     std::string enumToSTRTexture(CursorTypes type);

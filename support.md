@@ -1,1 +1,1 @@
-idk just dm me in discord
+idk just dm me in discord (@ecuet)
