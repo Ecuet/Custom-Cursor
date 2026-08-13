@@ -116,12 +116,12 @@ $on_mod(Loaded) {
 		}
 	}).leak();
 
-	KeyboardInputEvent().listen([](KeyboardInputData& data) {
+	listenForKeybindSettingPresses("ModMenusFixKeybind", [](Keybind const& keybind, bool down, bool repeat, double timestamp) {
 		bool isFixEnabled = Mod::get()->getSettingValue<bool>("ModMenusFix");
-		if(isFixEnabled && data.action == KeyboardInputData::Action::Press && data.key == cocos2d::enumKeyCodes::KEY_Tab) {
+		if(isFixEnabled && down && !repeat) {
 			Cursor::get()->togglebyTab();
 		}
-	}).leak();
+	});
 
 	Loader::get()->queueInMainThread([] {
 		CCScheduler::get()->scheduleUpdateForTarget(new SixSeven{}, 2067, false);

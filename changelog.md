@@ -1,5 +1,5 @@
 # 1.0.0
 Release
 
-# 1.1.0
-Test support for mod menus that overlaped cursor
+# 1.1.0 & 1.1.0
+Experimental support for mod menus that overlaped cursor
